@@ -654,3 +654,4 @@ class VariationalTransformer(nn.Module):
         log_probs = self.softmax(logits)
         
         return log_probs
+
