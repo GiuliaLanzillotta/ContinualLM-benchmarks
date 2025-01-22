@@ -783,7 +783,6 @@ class MyRobertaForMaskedLM(ModelWithHeadsAdaptersMixin, RobertaPreTrainedModel):
 
     def __init__(self, config,args):
         super().__init__(config)
-
         self.roberta = MyRobertaModel(config, add_pooling_layer=False, args=args)
         self.lm_head = RobertaLMHead(config)
         self.args = args

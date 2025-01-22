@@ -215,7 +215,7 @@ def parseing_posttrain():
     )
     parser.add_argument("--pt_task", type=int, help="task id")
     parser.add_argument("--ft_task", type=int, help="task id")
-    parser.add_argument("--base_dir", default='/hdd_3/zke4',type=str, help="task id")
+    parser.add_argument("--base_dir", default='.',type=str, help="task id")
     parser.add_argument("--s",type=int, help="smax")
     parser.add_argument("--smax", default=400, type=int, help="smax")
     parser.add_argument('--thres_cosh',default=50,type=int,required=False,help='(default=%(default)d)')

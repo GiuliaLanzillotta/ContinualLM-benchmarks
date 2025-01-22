@@ -20,6 +20,9 @@ from transformers import (
     get_scheduler,
     Adafactor
 )
+
+from transformers import RobertaConfig
+
 ########################################################################################################################
 
 def print_model_report(model):
@@ -275,7 +278,7 @@ def prepare_sequence_posttrain(args):
     args.task = args.pt_task
 
     args.data = data
-    args.base_model_name_or_path = "roberta-base"
+    args.base_model_name_or_path = "distilroberta-base" #CHANGEDHERE
     args.eval_t = args.pt_task # we need to use the adapter/plugin
 
     if 'comb' in args.baseline:
@@ -284,7 +287,7 @@ def prepare_sequence_posttrain(args):
         args.dataset_name = data[args.pt_task]
 
     if args.pt_task == 0 or 'one' in args.baseline or ('wiki' in args.baseline and args.pt_task==1): # no pre-trained for the first
-        args.model_name_or_path = "roberta-base"
+        args.model_name_or_path = "distilroberta-base" #CHANGEDHERE
     else:
         args.model_name_or_path = ckpt
 
@@ -440,12 +443,40 @@ def _lookfor_model_others(args,training_type):
     elif training_type == 'posttrain':
         MODEL = MyRobertaForMaskedLM
 
+    #print(args.hidden_size)
+
     model = MODEL.from_pretrained(
         args.model_name_or_path,
         from_tf=bool(".ckpt" in args.model_name_or_path),
         num_labels=args.class_num,
         args=args
     )
+    """
+    Standard Roberta-distil-base Config:
+        "attention_probs_dropout_prob": 0.1,
+        "bos_token_id": 0,
+        "classifier_dropout": null,
+        "eos_token_id": 2,
+        "hidden_act": "gelu",
+        "hidden_dropout_prob": 0.1,
+        "hidden_size": 768,
+        "initializer_range": 0.02,
+        "intermediate_size": 3072,
+        "layer_norm_eps": 1e-05,
+        "max_position_embeddings": 514,
+        "model_type": "roberta",
+        "num_attention_heads": 12,
+        "num_hidden_layers": 6,
+        "pad_token_id": 1,
+        "position_embedding_type": "absolute",
+        "transformers_version": "4.17.0",
+        "type_vocab_size": 1,
+        "use_cache": true,
+        "vocab_size": 50265
+    """
+    # my_roberta_config = RobertaConfig(num_hidden_layers=6, num_attention_heads=6, hidden_size=768, model_type="roberta")
+    # my_roberta_config.num_attention_heads = 4
+    # model = MODEL(my_roberta_config,args)
 
     teacher = MODEL.from_pretrained(
         args.model_name_or_path,
